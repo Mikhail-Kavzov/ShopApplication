@@ -5,17 +5,12 @@ namespace ShopApplication.Services.Implementation
 {
     public class FileService : IFileService
     {
-        private static readonly string _fileFolder = "images/";
+        private static readonly string _fileFolder = "Images/";
         private readonly IWebHostEnvironment _webHostEnvironment;
 
         public FileService(IWebHostEnvironment webHostEnvironment)
         {
             _webHostEnvironment = webHostEnvironment;
-        }
-
-        public void CreateFile(string fileName)
-        {
-            File.Create(Path.Combine(_fileFolder, fileName));
         }
 
         public async Task<string> CreateFileAsync(IFormFile formFile)
