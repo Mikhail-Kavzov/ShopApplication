@@ -1,0 +1,23 @@
+﻿@model RegisterViewModel
+<div class="formWrapper">
+    <form asp-action="Register" asp-controller="Account">
+        <div class="form-group">
+            <label asp-for="Email">Enter email:</label>
+            <input type="text" asp-for="Email" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Name">Enter name:</label>
+            <input type="text" asp-for="Name" />
+        </div>
+        <div class="form-group">
+            <label asp-for="Password">Enter password:</label>
+            <input type="text" asp-for="Password" />
+        </div>
+        <div class="form-group">
+            <label asp-for="PasswordConfirm">Confirm password:</label>
+            <input type="text" asp-for="PasswordConfirm" />
+        </div>
+        <input class="btn-primary" type="submit" value="Register" />
+    </form>
+</div>
+
