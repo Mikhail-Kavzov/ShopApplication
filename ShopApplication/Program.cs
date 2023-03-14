@@ -1,6 +1,10 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using ShopApplication.Context;
+using ShopApplication.Models;
 using System.Net.Sockets;
 using System.Text;
 
@@ -12,26 +16,21 @@ internal class Program
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
-        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
-            {
-                options.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuer= true,
+        var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
-                    ValidIssuer = AuthOptions.ISSUER,
+        builder.Services.AddDbContext<ApplicationContext>(opt => opt.UseSqlServer(connection));
 
-                    ValidateAudience = true,
+        builder.Services.AddIdentity<User, IdentityRole>(opts =>
+        {
+            opts.Password.RequiredLength = 1;
+            opts.Password.RequireNonAlphanumeric = false;
+            opts.Password.RequireLowercase = false;
+            opts.Password.RequireUppercase = false;
+            opts.Password.RequireDigit = false;
+            opts.User.RequireUniqueEmail = true;
 
-                    ValidAudience = AuthOptions.AUDIENCE,
+        }).AddEntityFrameworkStores<ApplicationContext>();
 
-                    ValidateLifetime = true,
-
-                    IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-
-                    ValidateIssuerSigningKey = true,
-                };
-            });
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -55,14 +54,5 @@ internal class Program
             pattern: "{controller=Home}/{action=Index}/{id?}");
 
         app.Run();
-    }
-
-    class AuthOptions
-    {
-        public const string ISSUER = "Server"; // издатель токена
-        public const string AUDIENCE = "Client"; // потребитель токена
-        const string KEY = "m2ewjk12i1ktt2";   // ключ для шифрации
-        public static SymmetricSecurityKey GetSymmetricSecurityKey() =>
-            new(Encoding.UTF8.GetBytes(KEY));
     }
 }
