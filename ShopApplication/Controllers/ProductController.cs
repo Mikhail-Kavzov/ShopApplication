@@ -91,7 +91,7 @@ namespace ShopApplication.Controllers
             return null;
         }
 
-        [HttpPost]
+        [HttpPut]
         public async Task<IActionResult> Update(ProductViewModel model,
             IFormFile? photoFile = null)
         {
