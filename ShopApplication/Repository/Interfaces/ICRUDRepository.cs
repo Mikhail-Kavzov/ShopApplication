@@ -6,5 +6,6 @@
         void Update(T item);
         void Delete(T item);
         Task<IEnumerable<T>> GetItemsAsync(int startPosition, int count);
+        Task<int> CountAsync();
     }
 }

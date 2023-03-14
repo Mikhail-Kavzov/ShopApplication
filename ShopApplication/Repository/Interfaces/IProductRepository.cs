@@ -4,6 +4,6 @@ namespace ShopApplication.Repository.Interfaces
 {
     public interface IProductRepository:ICRUDRepository<Product>
     {
-
+       Task<Product?> GetProductById(int id);
     }
 }
