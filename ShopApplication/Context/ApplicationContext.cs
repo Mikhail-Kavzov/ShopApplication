@@ -4,7 +4,7 @@ using ShopApplication.Models;
 
 namespace ShopApplication.Context
 {
-    public class ApplicationContext:IdentityDbContext<User>
+    public class ApplicationContext : IdentityDbContext<User>
     {
         public DbSet<User> User { get; set; } = null!;
         public DbSet<Product> Products { get; set; } = null!;
