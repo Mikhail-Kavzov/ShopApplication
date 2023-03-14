@@ -21,6 +21,12 @@ namespace ShopApplication.Repository.Implementation
             _context.Products.Remove(item);
         }
 
+        public async Task<Product?> GetProductById(int id)
+        {
+            return await _context.Products.Include(p=>p.User)
+                .FirstOrDefaultAsync(p => p.ProductId == id);
+        }
+
         public async Task<IEnumerable<Product>> GetItemsAsync(int startPosition, int count)
         {
             return await _context.Products.Include(p => p.User)
@@ -30,6 +36,11 @@ namespace ShopApplication.Repository.Implementation
         public void Update(Product item)
         {
             _context.Products.Update(item);
+        }
+
+        public async Task<int> CountAsync()
+        {
+            return await _context.Products.CountAsync();
         }
     }
 }
