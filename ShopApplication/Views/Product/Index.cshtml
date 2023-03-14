@@ -1,0 +1,41 @@
+﻿@using ShopApplication.Models;
+@using ShopApplication.Helpers;
+@model IndexViewModel<Product>
+@{
+    var currentUser = User.Identity.Name;
+    var isAdmin = User.IsInRole("admin");
+}
+<div class="container">
+    <div class="row">
+        <div class="product-wrapper col-md-12">
+            @{
+                foreach (var product in Model.Items)
+                {
+                    <div class="product" id="@product.ProductId">
+                        <p class="product-name">@product.Name</p>
+                        <div class="product-image">
+                            <img src="~/Images/@product.PhotoLink" alt="img" />
+                        </div>
+                        <p class="product-price">@product.Price</p>
+                        <p class="product-description">@product.Description</p>
+                        @{
+                            if (isAdmin || currentUser == product.User.UserName)
+                            {
+                                <div class="action-btns">
+                                    <div class="update-wrapper-link">
+                                        <a asp-controller="Product" asp-action="Update" 
+                                        class="update-link">Update</a>
+                                    </div>
+                                    <input type="button" class="delete-btn btn-primary">
+                                </div>
+                            }
+                        }
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+<div class="btn-group">
+    @Html.PageLinks(Model.PageInfo, x => Url.Action("Index",new { page = x}))
+</div>
