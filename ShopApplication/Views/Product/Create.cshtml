@@ -5,20 +5,19 @@
         <div class="form-group">
             <span asp-validation-for="Name"/>
             <label asp-for="Name">Name:</label>
-            <input type="text" asp-for="Name" />
+            <input type="text" asp-for="Name" maxlength="15" required/>
         </div>
         <div class="form-group">
             <span asp-validation-for="Price"></span>
             <label asp-for="Price">Price:</label>
-            <input type="text" asp-for="Price" />
+            <input type="number" asp-for="Price" max="10000" min="1" required/>
         </div>
         <div class="form-group">
             <span asp-validation-for="Description"></span>
             <label asp-for="Description">Description:</label>
-            <textarea asp-for="Description"></textarea>
+            <textarea asp-for="Description" maxlength="300" required></textarea>
         </div>
         <div class="form-group">
-            <input type="hidden" asp-for="PhotoLink" />
             <label for="photoFile">Photo:</label>
             <input type="file" id="photoFile" name="photoFile" accept="image/png, image/jpeg, image/jpg" required/>
         </div>

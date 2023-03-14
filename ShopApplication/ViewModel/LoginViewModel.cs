@@ -4,9 +4,12 @@ namespace ShopApplication.ViewModel
 {
     public class LoginViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Field is empty")]
+        [StringLength(20, ErrorMessage = "Email should contain 1..20 symbols")]
         public string? Email { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Field is empty")]
+        [StringLength(20, ErrorMessage = "Password should contain 1..20 symbols")]
         public string? Password { get; set; }
 
         [Display(Name = "RememberMe")]

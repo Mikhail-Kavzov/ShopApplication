@@ -23,10 +23,10 @@
                             {
                                 <div class="action-btns">
                                     <div class="update-wrapper-link">
-                                        <a asp-controller="Product" asp-action="Update" 
-                                        class="update-link">Update</a>
+                                        <a asp-controller="Product" asp-action="Update"
+                           class="update-link">Update</a>
                                     </div>
-                                    <input type="button" class="delete-btn btn-primary">
+                                    <input type="button" onclick="deleteClick(event)" class="delete-btn btn-primary">
                                 </div>
                             }
                         }
@@ -39,3 +39,13 @@
 <div class="btn-group">
     @Html.PageLinks(Model.PageInfo, x => Url.Action("Index",new { page = x}))
 </div>
+@section Scripts
+{
+    <script type="text/javascript">
+        function deleteClick(event){
+            let target = event.target;
+            let product = $(target).closest('.product');
+            product.remove();
+        }
+    </script>
+}
