@@ -7,11 +7,14 @@ namespace ShopApplication.Services.Implementation
 {
     public class ProductService : AbstractService, IProductService
     {
-        public ProductService(IProductRepository productRepository) :base(productRepository)
+        private readonly IProductRepository _productRepository;
+
+        public ProductService(IProductRepository productRepository) : base(productRepository)
         {
+            _productRepository = productRepository;
         }
 
-        public void Create(ProductViewModel model)
+        public void Create(ProductViewModel model, string userId)
         {
             var product = new Product()
             {
@@ -19,8 +22,47 @@ namespace ShopApplication.Services.Implementation
                 Price = model.Price,
                 PhotoLink = model.PhotoLink,
                 Description = model.Description,
-                UserId = 
+                UserId = userId
             };
+            _productRepository.Create(product);
+        }
+
+        public void Update(Product product, ProductViewModel model)
+        {
+            product.Price = model.Price;
+            product.Name = model.Name;
+            product.Description = model.Description;
+            product.PhotoLink = model.PhotoLink;
+            _productRepository.Update(product);
+        }
+
+        public async Task<Product?> GetProductById(int id)
+        {
+            return await _productRepository.GetProductById(id);
+        }
+
+        public ProductViewModel CreateProductViewModel(Product product)
+        {
+            var productViewModel = new ProductViewModel()
+            {
+                ProductId = product.ProductId,
+                Price = product.Price,
+                Description = product.Description,
+                Name = product.Name,
+                PhotoLink = product.PhotoLink,
+                UserName = product.User.UserName,
+            };
+            return productViewModel;
+        }
+
+        public async Task<IEnumerable<Product>> GetProductsAsync(int startPosition, int count)
+        {
+            return await _productRepository.GetItemsAsync(startPosition, count);
+        }
+
+        public async Task<int> ProductsTotal()
+        {
+            return await _productRepository.CountAsync();
         }
     }
 }
