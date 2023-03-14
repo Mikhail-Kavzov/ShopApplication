@@ -1,3 +1,9 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.OAuth;
+using Microsoft.IdentityModel.Tokens;
+using System.Net.Sockets;
+using System.Text;
+
 internal class Program
 {
     private static void Main(string[] args)
@@ -6,7 +12,26 @@ internal class Program
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer= true,
 
+                    ValidIssuer = AuthOptions.ISSUER,
+
+                    ValidateAudience = true,
+
+                    ValidAudience = AuthOptions.AUDIENCE,
+
+                    ValidateLifetime = true,
+
+                    IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+
+                    ValidateIssuerSigningKey = true,
+                };
+            });
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -22,6 +47,7 @@ internal class Program
 
         app.UseRouting();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
         app.MapControllerRoute(
@@ -29,5 +55,14 @@ internal class Program
             pattern: "{controller=Home}/{action=Index}/{id?}");
 
         app.Run();
+    }
+
+    class AuthOptions
+    {
+        public const string ISSUER = "Server"; // издатель токена
+        public const string AUDIENCE = "Client"; // потребитель токена
+        const string KEY = "m2ewjk12i1ktt2";   // ключ для шифрации
+        public static SymmetricSecurityKey GetSymmetricSecurityKey() =>
+            new(Encoding.UTF8.GetBytes(KEY));
     }
 }
