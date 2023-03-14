@@ -1,17 +1,12 @@
 using CollectionsProject.Context;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using ShopApplication.Context;
 using ShopApplication.Models;
 using ShopApplication.Repository.Implementation;
 using ShopApplication.Repository.Interfaces;
 using ShopApplication.Services.Implementation;
 using ShopApplication.Services.Interfaces;
-using System.Net.Sockets;
-using System.Text;
 
 internal class Program
 {
