@@ -64,6 +64,7 @@ namespace ShopApplication.Controllers
 
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, "user");
                     await _signInManager.SignInAsync(user, false);
                     RedirectToAction("Index", "Home");
                 }
