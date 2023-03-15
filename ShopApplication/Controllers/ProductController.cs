@@ -29,9 +29,9 @@ namespace ShopApplication.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index(int page = 1)
         {
-            var products = await _productService.GetProductsAsync
+            var products = await _productService.GetItemsAsync
                 ((page - 1) * PAGES_COUNT, PAGES_COUNT);
-            var count = await _productService.ProductsTotal();
+            var count = await _productService.ItemsTotal();
             var pageInfo = new PageInfoViewModel()
             {
                 PageNumber = page,
@@ -44,6 +44,19 @@ namespace ShopApplication.Controllers
                 PageInfo = pageInfo,
             };
             return View(indexModel);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ProductInfo(int id)
+        {
+            var product = await _productService.GetProductById(id);
+            if (product == null)
+            {
+                return NotFound();
+            }
+            var productViewModel = _productService.CreateProductViewModel(product);
+            return View(productViewModel);
         }
 
         [HttpGet]
@@ -91,7 +104,7 @@ namespace ShopApplication.Controllers
             return null;
         }
 
-        [HttpPut]
+        [HttpPost]
         public async Task<IActionResult> Update(ProductViewModel model,
             IFormFile? photoFile = null)
         {
@@ -124,6 +137,7 @@ namespace ShopApplication.Controllers
             {
                 return result;
             }
+            await _productService.DeleteAsync(product);
             return Ok();
         }
 
