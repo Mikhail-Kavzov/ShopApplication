@@ -1,4 +1,6 @@
-﻿namespace ShopApplication.Services.Interfaces
+﻿using ShopApplication.Models;
+
+namespace ShopApplication.Services.Interfaces
 {
     public interface IService
     {

@@ -7,9 +7,10 @@ namespace ShopApplication.Services.Interfaces
     {
         void Create(ProductViewModel model, string userId);
         Task<Product?> GetProductById(int id);
+        Task<int> ItemsTotal();
         ProductViewModel CreateProductViewModel(Product product);
+        Task<IEnumerable<Product>> GetItemsAsync(int startPosition, int count);
         void Update(Product product, ProductViewModel model);
-        Task<IEnumerable<Product>> GetProductsAsync(int startPosition, int count);
-        Task<int> ProductsTotal();
+        Task DeleteAsync(Product product);
     }
 }
