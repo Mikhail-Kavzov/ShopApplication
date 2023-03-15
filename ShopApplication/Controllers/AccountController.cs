@@ -66,7 +66,7 @@ namespace ShopApplication.Controllers
                 {
                     await _userManager.AddToRoleAsync(user, "user");
                     await _signInManager.SignInAsync(user, false);
-                    RedirectToAction("Index", "Home");
+                    return RedirectToAction("Index", "Home");
                 }
 
                 foreach (var error in result.Errors)
@@ -77,7 +77,6 @@ namespace ShopApplication.Controllers
             return View(model);
         }
 
-        [HttpPost]
         [Authorize]
         public async Task<IActionResult> Logout()
         {
