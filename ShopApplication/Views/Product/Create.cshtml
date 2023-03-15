@@ -1,26 +1,28 @@
 ﻿@model ProductViewModel
-<div class="formWrapper">
-    <form asp-action="Create" asp-controller="Product" enctype="multipart/form-data">
-        <div class="validation" asp-validation-summary="All"></div>
-        <div class="form-group">
-            <span asp-validation-for="Name"/>
-            <label asp-for="Name">Name:</label>
-            <input type="text" asp-for="Name" maxlength="15" required/>
-        </div>
-        <div class="form-group">
-            <span asp-validation-for="Price"></span>
-            <label asp-for="Price">Price:</label>
-            <input type="number" asp-for="Price" max="10000" min="1" required/>
-        </div>
-        <div class="form-group">
-            <span asp-validation-for="Description"></span>
-            <label asp-for="Description">Description:</label>
-            <textarea asp-for="Description" maxlength="300" required></textarea>
-        </div>
-        <div class="form-group">
-            <label for="photoFile">Photo:</label>
-            <input type="file" id="photoFile" name="photoFile" accept="image/png, image/jpeg, image/jpg" required/>
-        </div>
-        <input class="btn-primary" type="submit" value="Update" />
-    </form>
+<div class="form-wrapper">
+    <div class="col-md-8">
+        <form asp-action="Create" asp-controller="Product" enctype="multipart/form-data">
+            <div class="validation" asp-validation-summary="All"></div>
+            <div class="form-group">
+                <label asp-for="Name" class="text_label">Name:</label>
+                <input type="text" class="input_form" asp-for="Name" maxlength="15" required />
+                <span asp-validation-for="Name" class="text-danger" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="text_label">Price:</label>
+                <input type="number" class="input_form" asp-for="Price" max="10000" min="1" required />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="text_label">Description:</label>
+                <textarea asp-for="Description" class="input_form" maxlength="300" required></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label for="photoFile">Photo:</label>
+                <input type="file" id="photoFile" name="photoFile" class="input_form" accept="image/png, image/jpeg, image/jpg" required />
+            </div>
+            <input class="btn-primary btn-send" type="submit" value="Create" />
+        </form>
+    </div>
 </div>

@@ -1,0 +1,15 @@
+﻿@model ProductViewModel
+<div class="container">
+    <div class="row">
+        <div class="product-wrapper-center col-md-12">
+            <div class="product col-md-4" id="@Model.ProductId">
+                <p class="product-name">@Model.Name</p>
+                <div class="product-image">
+                    <img src="~/Images/@Model.PhotoLink" alt="img" />
+                </div>
+                <p class="product-price">@Model.Price$</p>
+                <p class="product-description">@Model.Description</p>
+            </div>
+        </div>
+    </div>
+</div>

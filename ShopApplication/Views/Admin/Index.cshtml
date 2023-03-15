@@ -1,5 +1,48 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@using ShopApplication.Models;
+@using ShopApplication.Helpers;
+@model IndexViewModel<User>
 @{
+    var usersCount = Model.Items.Count();
+}
+<div class="container-fluid">
+    <div class="row">
+        @{
+            if (usersCount != 0)
+            {
+                <table class="table table-hover bg-warning table-bordered text-center">
+                    <thead class="thead">
+                        <tr>
+                            <th>Email</th>
+                            <th>Name</th>
+                            <th>Password hash</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody" class="bg-white">
+                        @{
+                            foreach (var user in Model.Items)
+                            {
+                                <tr id="@user.Id" class="table-info">
+                                    <td class="table-cell">@user.Email</td>
+                                    <td class="table-cell">@user.UserName</td>
+                                    <td class="table-cell">@user.PasswordHash</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <h1 class="text-center">No Users</h1>
+            }
+        }
+    </div>
+</div>
+@{
+    if (usersCount != 0)
+    {
+        <div class="btn-group">
+            @Html.PageLinks(Model.PageInfo, x => Url.Action("Index",new { page = x}))
+        </div>
+    }
 }
