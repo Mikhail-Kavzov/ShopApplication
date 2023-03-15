@@ -1,4 +1,5 @@
 using CollectionsProject.Context;
+using EntityFrameworkCore.UseRowNumberForPaging;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using ShopApplication.Context;
@@ -18,7 +19,8 @@ internal class Program
         builder.Services.AddControllersWithViews();
         var connection = builder.Configuration.GetConnectionString("DefaultConnection");
 
-        builder.Services.AddDbContext<ApplicationContext>(opt => opt.UseSqlServer(connection));
+        builder.Services.AddDbContext<ApplicationContext>
+            (opt => opt.UseSqlServer(connection, builder => builder.UseRowNumberForPaging()));
 
         builder.Services.AddIdentity<User, IdentityRole>(opts =>
         {
@@ -76,7 +78,9 @@ internal class Program
     {
         builder.Services.AddScoped<IProductService, ProductService>();
         builder.Services.AddScoped<IFileService, FileService>();
+        builder.Services.AddScoped<IUserService, UserService>();
 
         builder.Services.AddScoped<IProductRepository, ProductRepository>();
+        builder.Services.AddScoped<IUserRepository,UserRepository>();
     }
 }
