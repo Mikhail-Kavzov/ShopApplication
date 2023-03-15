@@ -21,6 +21,7 @@ namespace ShopApplication.Controllers
             _userManager = userManager;
         }
 
+        [HttpGet]
         public async Task<IActionResult> Index(int page = 1)
         {
             var users = await _userService.GetItemsAsync((page - 1) * PAGES_COUNT, PAGES_COUNT);
