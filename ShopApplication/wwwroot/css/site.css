@@ -89,6 +89,13 @@ input, textarea{
     outline: none;
 }
 
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: inherit;
+}
+
 .input_form:focus, .input_form:hover {
     box-shadow: 5px 5px 43px -34px rgba(34, 60, 80, 0.6) inset;
 }
