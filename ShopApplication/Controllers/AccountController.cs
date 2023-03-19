@@ -40,12 +40,12 @@ namespace ShopApplication.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _signInManager
-                    .PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+                    .PasswordSignInAsync(model.Name, model.Password, model.RememberMe, false);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Index", "Home");
                 }
-                ModelState.AddModelError("", "Incorrect email or password");
+                ModelState.AddModelError("", "Incorrect name or password");
             }
             return View(model);
         }
