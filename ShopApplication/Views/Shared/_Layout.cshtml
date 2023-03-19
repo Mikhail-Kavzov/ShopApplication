@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@inject IViewLocalizer Loc
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -12,7 +13,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Shop</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">@Loc["Shop"]</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -20,40 +21,43 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">@Loc["Home"]</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ProductPage">Products</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="ProductPage">@Loc["Products"]</a>
                         </li>
                         @{
                             if (!User.Identity.IsAuthenticated)
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Login</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">@Loc["Login"]</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">Register</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register">@Loc["Register"]</a>
                                 </li>
                             }
                             else
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Create">New Product</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Product" asp-action="Create">@Loc["New Product"]</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Logout</a>
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">@Loc["Logout"]</a>
                                 </li>
                             }
                             if (User.IsInRole("admin"))
                             {
                                 <li class="nav-item">
-                                    <a class="nav-link text-danger" asp-area="" asp-controller="Admin" asp-action="Index">Admin</a>
+                                    <a class="nav-link text-danger" asp-area="" asp-controller="Admin" asp-action="Index">@Loc["Admin"]</a>
                                 </li>
                             }
 
                         }
                         
                     </ul>
+                    <div class="language-wrapper">
+                        @await Html.PartialAsync("SelectLanguage")
+                    </div>
                 </div>
             </div>
         </nav>
@@ -66,7 +70,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - ShopApplication - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2023 - ShopApplication
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

@@ -2,6 +2,7 @@
 @using ShopApplication.Helpers;
 @model IndexViewModel<User>
 @{
+    ViewData["Title"] = "Admin Panel";
     var usersCount = Model.Items.Count();
 }
 <div class="container-fluid">
