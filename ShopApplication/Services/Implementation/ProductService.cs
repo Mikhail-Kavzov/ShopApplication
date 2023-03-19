@@ -55,9 +55,10 @@ namespace ShopApplication.Services.Implementation
             return productViewModel;
         }
 
-        public async Task<IEnumerable<Product>> GetItemsAsync(int startPosition, int count)
+        public async Task<IEnumerable<Product>> GetItemsAsync(int startPosition, int count,
+            string sortOrder = "", string filter = "")
         {
-            return await _productRepository.GetItemsAsync(startPosition, count);
+            return await _productRepository.GetItemsAsync(startPosition, count, sortOrder, filter);
         }
 
         public async Task<int> ItemsTotal()

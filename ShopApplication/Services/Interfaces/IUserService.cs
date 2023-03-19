@@ -3,10 +3,9 @@ using ShopApplication.ViewModel;
 
 namespace ShopApplication.Services.Interfaces
 {
-    public interface IUserService : IService
+    public interface IUserService : ICountService
     {
         Task<User?> GetUserById(string id);
-        Task<int> ItemsTotal();
         Task<IEnumerable<User>> GetItemsAsync(int startPosition, int count);
     }
 }
