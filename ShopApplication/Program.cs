@@ -1,6 +1,8 @@
 using CollectionsProject.Context;
 using EntityFrameworkCore.UseRowNumberForPaging;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using ShopApplication.Context;
 using ShopApplication.Models;
@@ -8,6 +10,7 @@ using ShopApplication.Repository.Implementation;
 using ShopApplication.Repository.Interfaces;
 using ShopApplication.Services.Implementation;
 using ShopApplication.Services.Interfaces;
+using System.Globalization;
 
 internal class Program
 {
@@ -16,8 +19,21 @@ internal class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
-        builder.Services.AddControllersWithViews();
+        builder.Services.AddLocalization(options => options.ResourcesPath = "Resources");
+
+        builder.Services.AddControllersWithViews()
+            .AddDataAnnotationsLocalization()
+            .AddViewLocalization(LanguageViewLocationExpanderFormat.SubFolder);
+
         var connection = builder.Configuration.GetConnectionString("DefaultConnection");
+
+        builder.Services.Configure<RequestLocalizationOptions>(options =>
+        {
+            var supportedCultures = new[] { "en", "ru" };
+            options.SetDefaultCulture(supportedCultures[0])
+                .AddSupportedCultures(supportedCultures)
+                .AddSupportedUICultures(supportedCultures);
+        });
 
         builder.Services.AddDbContext<ApplicationContext>
             (opt => opt.UseSqlServer(connection, builder => builder.UseRowNumberForPaging()));
@@ -61,6 +77,8 @@ internal class Program
             app.UseHsts();
         }
 
+        app.UseStatusCodePagesWithReExecute("/Error/PageNotFound");
+
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 
@@ -68,6 +86,16 @@ internal class Program
 
         app.UseAuthentication();
         app.UseAuthorization();
+
+        var supportedCultures = new[] { "en", "ru" };
+        // 5. 
+        // Culture from the HttpRequest
+        var localizationOptions = new RequestLocalizationOptions()
+            .SetDefaultCulture(supportedCultures[0])
+            .AddSupportedCultures(supportedCultures)
+            .AddSupportedUICultures(supportedCultures);
+
+        app.UseRequestLocalization(localizationOptions);
 
         app.MapControllerRoute(
             name: "default",
