@@ -23,8 +23,8 @@
                             {
                                 <tr id="@user.Id" class="table-info">
                                     <td class="table-cell">@user.Email</td>
-                                    <td class="table-cell">@user.UserName</td>
-                                    <td class="table-cell">@user.PasswordHash</td>
+                                    <td class="table-cell" onclick="displayNameForm(event)">@user.UserName</td>
+                                    <td class="table-cell" onclick="displayPwdForm(event)">@user.PasswordHash</td>
                                 </tr>
                             }
                         }
@@ -38,6 +38,38 @@
         }
     </div>
 </div>
+<div id="change-name-form" class="modal-form">
+    <div class="modal-content">
+        <div class="close-wrapper">
+            <span class="close" onclick="hideName()">&times;</span>
+        </div>
+        <form method="post" data-ajax="true" data-ajax-method="post" asp-controller="Admin" data-ajax-success="successName" data-ajax-failure="failure" asp-action="ChangeUserName">
+            <input type="hidden" id="nameHidden" name="userId" />
+            <div class="form-group">
+                <label class="text_label">Enter new name:</label>
+                <input type="text" id="newUserName" class="input_form" name="newUserName" maxlength="15" required />
+            </div>
+            <input type="submit" class="btn-primary btn-send" value="Change Name" />
+        </form>
+    </div>
+</div>
+<div id="password-reset-form" class="modal-form">
+    <div class="modal-content">
+        <div class="close-wrapper">
+            <span class="close" onclick="hidePwd()">&times;</span>
+        </div>
+        <form method="post" data-ajax="true" data-ajax-method="post" asp-controller="Admin"
+              data-ajax-success="successPwd" data-ajax-failure="failure" asp-action="ResetPassword">
+            <input type="hidden" id="pwdHidden" name="userId" />
+            <div class="form-group">
+                <label class="text_label">Enter new password:</label>
+                <input type="password" class="input_form" name="newPassword" maxlength="20" />
+            </div>
+            <input type="submit" class="btn-primary btn-send" value="Update Password" />
+        </form>
+    </div>
+
+</div>
 @{
     if (usersCount != 0)
     {
@@ -45,4 +77,43 @@
             @Html.PageLinks(Model.PageInfo, x => Url.Action("Index",new { page = x}))
         </div>
     }
+}
+@section Scripts{
+    <script type="text/javascript">
+        function displayPwdForm(e) {
+            let target = e.target;
+            $('#pwdHidden').val($(target).parent().attr('id'));
+            $('#password-reset-form').show();
+        }
+        function displayNameForm(e) {
+            let target = e.target;
+            $('#newUserName').val($(target).text());
+            $('#nameHidden').val($(target).parent().attr('id'));
+            $('#change-name-form').show();
+        }
+        function successPwd(data) {
+            let userId = $('#pwdHidden').val();
+            let pwdCell = $('#' + userId).children().last();
+            $(pwdCell).text(data);
+            $('#password-reset-form').hide();
+        }
+        function hidePwd(){
+            $('#password-reset-form').hide();
+        }
+        function hideName(){
+            $('#change-name-form').hide();
+        }
+        function failure(xhr) {
+            alert('Some error occured: ' + xhr.status);
+            $('#password-reset-form').hide();
+            $('#change-name-form').hide();
+        }
+        function successName(data) {
+            let newName = $('#newUserName').val();
+            let userId = $('#nameHidden').val();
+            let nameCell = $('#' + userId).children().eq(1);
+            $(nameCell).text(newName);
+            $('#change-name-form').hide();
+        }
+    </script>
 }
