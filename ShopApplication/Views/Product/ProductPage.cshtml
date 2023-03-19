@@ -1,0 +1,62 @@
+﻿@using ShopApplication.Models;
+@using ShopApplication.Helpers;
+@model IndexViewModel<Product>
+
+<div id="page-container" class="container-fluid">
+    <div class="row">
+        <div class="col-md-12 d-flex justify-content-around">
+            <div class="sort-wrapper">
+                <p class="text_label">Sort by:</p>
+                <select class="form-select" onchange="sortFilterProducts()" id="sort-select">
+                    <option>name</option>
+                    <option>price</option>
+                    <option>name_desc</option>
+                    <option>price_desc</option>
+                </select>
+            </div>
+            <div class="filter-wrapper">
+                <label class="text_label">Enter name:</label>
+                <input type="text" id="filter-input" class="input_form" style="display:inline-block" />
+                <button onclick="sortFilterProducts()" class="btn-filter btn-send btn-primary">Find</button>
+            </div>
+        </div>
+    </div>
+</div>
+@await Html.PartialAsync("ProductItems",Model)
+@section Scripts
+    {
+    <script type="text/javascript">
+        function deleteClick(event) {
+
+            let target = event.target;
+            let product = $(target).closest('.product');
+            let productId = $(product).attr('id');
+            $.ajax({
+                method: 'DELETE',
+                url: '/Product/Delete',
+                data: { id: productId },
+                success: function (data) {
+                    product.remove();
+                },
+                error: function (jqXHR, exception) {
+                    alert('Error has occured while deleting: ' + jqXHR.status);
+                }
+            });
+        }
+        function sortFilterProducts() {
+            let sortOrder = $("#sort-select option:selected").text().trim();
+            let filter = $("#filter-input").val().trim();
+            if (sortOrder || filter) {
+                $.get('/Product/ProductItems',
+                    { page: @Model.PageInfo.PageNumber, sortOrder: sortOrder, filter: filter },
+                    function (data) {
+                        if (data) {
+                            $('#product-container').remove();
+                            $('#pagination').remove();
+                            $('#page-container').children().append(data);
+                        }
+                    });
+            }
+        }
+    </script>
+}

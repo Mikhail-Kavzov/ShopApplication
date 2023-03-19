@@ -6,7 +6,7 @@
     var isAdmin = User.IsInRole("admin");
     var productCount = Model.Items.Count();
 }
-<div class="container">
+<div id="product-container" class="container">
     <div class="row">
         <div class="product-wrapper col-md-12">
             @{
@@ -14,10 +14,10 @@
                 {
                     foreach (var product in Model.Items)
                     {
-                        <div class="product col-md-4" id="@product.ProductId">
+                        <div class="product col-md-5 col-12" id="@product.ProductId">
                             <p class="product-name">@product.Name</p>
                             <div class="product-image">
-                                <img src="~/Images/@product.PhotoLink" alt="img" />
+                                <img class="image" src="~/Images/@product.PhotoLink" alt="img" />
                             </div>
                             <p class="product-price">@product.Price$</p>
                             <p class="info-link-wrapper">
@@ -28,7 +28,9 @@
                                 {
                                     <div class="action-btns">
                                         <div class="update-wrapper-link btn-danger">
-                                            <a asp-controller="Product" asp-action="Update" asp-route-id="@product.ProductId" class="update-link text-white">Update</a>
+                                            <a asp-controller="Product" asp-action="Update" 
+                                            asp-route-id="@product.ProductId"
+                                            class="update-link text-white">Update</a>
                                         </div>
                                         <input type="button" onclick="deleteClick(event)" value="Delete" class="delete-btn btn-primary">
                                     </div>
@@ -48,31 +50,9 @@
 @{
     if (productCount != 0)
     {
-        <div class="btn-group">
-            @Html.PageLinks(Model.PageInfo, x => Url.Action("Index",new { page = x}))
+        <div id="pagination" class="btn-group">
+            @Html.PageLinks(Model.PageInfo, x => Url.Action("ProductPage",new { page = x}))
         </div>
     }
 }
 
-@section Scripts
-    {
-    <script type="text/javascript">
-        function deleteClick(event) {
-
-            let target = event.target;
-            let product = $(target).closest('.product');
-            let productId = $(product).attr('id');
-            $.ajax({
-                method: 'DELETE',
-                url: '/Product/Delete',
-                data: { id: productId },
-                success: function (data) {
-                    product.remove();
-                },
-                error: function (jqXHR, exception) {
-                    alert('Error has occured while deleting: ' + jqXHR.status);
-                }
-            });
-        }
-    </script>
-}
