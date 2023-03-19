@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using ShopApplication.Extensions;
 using ShopApplication.Models;
 using ShopApplication.Services.Interfaces;
@@ -15,34 +16,41 @@ namespace ShopApplication.Controllers
         private readonly IProductService _productService;
         private readonly IFileService _fileService;
         private readonly UserManager<User> _userManager;
-        private const int PAGES_COUNT = 5;
+        private readonly IPaginationService _paginationService;
+        private const int PAGES_COUNT = 4;
 
         public ProductController(IProductService productService,
-            IFileService fileService, UserManager<User> userManager)
+            IFileService fileService, UserManager<User> userManager,
+            IPaginationService paginationService)
         {
             _productService = productService;
             _fileService = fileService;
             _userManager = userManager;
+            _paginationService = paginationService;
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> Index(int page = 1)
+        public async Task<IActionResult> ProductItems(int page = 1, string sortOrder = "",
+            string filter = "")
+        {
+            var products = await _productService.GetItemsAsync
+                ((page - 1) * PAGES_COUNT, PAGES_COUNT, sortOrder, filter);
+            var count = await _productService.ItemsTotal();
+            var indexModel = _paginationService.CreateIndexViewModel(page, count,
+                PAGES_COUNT, products);
+            return PartialView(indexModel);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> ProductPage(int page = 1)
         {
             var products = await _productService.GetItemsAsync
                 ((page - 1) * PAGES_COUNT, PAGES_COUNT);
             var count = await _productService.ItemsTotal();
-            var pageInfo = new PageInfoViewModel()
-            {
-                PageNumber = page,
-                PageSize = PAGES_COUNT,
-                TotalItems = count,
-            };
-            var indexModel = new IndexViewModel<Product>
-            {
-                Items = products,
-                PageInfo = pageInfo,
-            };
+            var indexModel = _paginationService.CreateIndexViewModel(page, count,
+                PAGES_COUNT, products);
             return View(indexModel);
         }
 
@@ -140,6 +148,5 @@ namespace ShopApplication.Controllers
             await _productService.DeleteAsync(product);
             return Ok();
         }
-
     }
 }
