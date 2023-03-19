@@ -31,7 +31,9 @@ internal class Program
             opts.Password.RequireDigit = false;
             opts.User.RequireUniqueEmail = true;
 
-        }).AddEntityFrameworkStores<ApplicationContext>();
+        }).AddEntityFrameworkStores<ApplicationContext>()
+        .AddTokenProvider<DataProtectorTokenProvider<User>>(TokenOptions.DefaultProvider);
+
         AddDependencies(builder);
         var app = builder.Build();
 
@@ -79,6 +81,7 @@ internal class Program
         builder.Services.AddScoped<IProductService, ProductService>();
         builder.Services.AddScoped<IFileService, FileService>();
         builder.Services.AddScoped<IUserService, UserService>();
+        builder.Services.AddScoped<IPaginationService,PaginationService>();
 
         builder.Services.AddScoped<IProductRepository, ProductRepository>();
         builder.Services.AddScoped<IUserRepository,UserRepository>();
