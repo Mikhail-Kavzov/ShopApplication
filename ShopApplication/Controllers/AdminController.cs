@@ -14,11 +14,14 @@ namespace ShopApplication.Controllers
 
         private readonly IUserService _userService;
         private readonly UserManager<User> _userManager;
+        private readonly IPaginationService _paginationService;
 
-        public AdminController(IUserService userService, UserManager<User> userManager)
+        public AdminController(IUserService userService, UserManager<User> userManager,
+            IPaginationService paginationService)
         {
             _userService = userService;
             _userManager = userManager;
+            _paginationService = paginationService;
         }
 
         [HttpGet]
@@ -26,22 +29,12 @@ namespace ShopApplication.Controllers
         {
             var users = await _userService.GetItemsAsync((page - 1) * PAGES_COUNT, PAGES_COUNT);
             var count = await _userService.ItemsTotal();
-            PageInfoViewModel pageInfo = new()
-            {
-                PageNumber = page,
-                PageSize = PAGES_COUNT,
-                TotalItems = count,
-            };
-            var indexModel = new IndexViewModel<User>
-            {
-                Items = users,
-                PageInfo = pageInfo,
-            };
+            var indexModel = _paginationService.CreateIndexViewModel(page, count, PAGES_COUNT, users);
             return View(indexModel);
         }
 
-        [HttpPut]
-        public async Task<IActionResult>ResetPassword(string newPassword, string userId)
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(string userId, string newPassword)
         {
             var user = await _userManager.FindByIdAsync(userId);
             if (user == null)
@@ -52,12 +45,12 @@ namespace ShopApplication.Controllers
             var result = await _userManager.ResetPasswordAsync(user, resetToken, newPassword);
             if (result.Succeeded)
             {
-                return Ok();
+                return Ok(user.PasswordHash);
             }
             return BadRequest();
         }
 
-        [HttpPut]
+        [HttpPost]
         public async Task<IActionResult> ChangeUserName(string userId, string newUserName)
         {
             var user = await _userManager.FindByIdAsync(userId);
@@ -72,8 +65,5 @@ namespace ShopApplication.Controllers
             }
             return BadRequest();
         }
-
-
-
     }
 }
